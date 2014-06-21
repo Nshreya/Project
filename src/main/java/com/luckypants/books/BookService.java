@@ -34,6 +34,7 @@ import com.luckypants.properties.PropertiesLookup;
 //import com.mongodb.DBCollection;
 //import com.mongodb.DBCursor;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
@@ -55,7 +56,34 @@ public class BookService {
 		}
 		return Response.status(200).entity(booksString).build();
 	}
-	
+	/*This code is for  searching books record by any field */
+	@GET
+	@Path("/{isbn}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBook(@PathParam("isbn") String isbn) {
+	 
+	ArrayList<DBObject> result=new ArrayList<DBObject>() ;
+	BooksConnectionProvider booksConn = new BooksConnectionProvider();
+	DBCollection booksCollection = booksConn.getCollection();
+	 
+	DBCursor cursor = booksCollection.find();
+	while(cursor.hasNext()){
+	DBObject obj = cursor.next();
+	  if( obj.get("title")!=null ){
+		  if(obj.get("title").toString().matches("(.*)" +isbn) || obj.get("title").toString().matches(isbn +"(.*)" )){ 
+			  result.add(obj);
+			  System.out.println("inside if");
+		  }
+	  }/*else if( obj.get("title")!=null && obj.get("title").equals(isbn)){
+		  result.add(obj);
+	  }else if( obj.get("isbn")!=null && obj.get("isbn").equals(isbn)){
+		  result.add(obj);
+	  }*/
+	}
+	  
+	return Response.status(200).entity(result).build();
+	}
+
 	@GET
 	@Path("/authors")
 	@Produces(MediaType.APPLICATION_JSON)

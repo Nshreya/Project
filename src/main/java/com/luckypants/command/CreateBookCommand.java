@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.luckypants.model.Author;
 import com.luckypants.model.Book;
 import com.luckypants.mongo.BooksConnectionProvider;
 import com.mongodb.DBCollection;
